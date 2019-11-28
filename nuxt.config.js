@@ -1,9 +1,17 @@
 
+const routes = require('./utils/routes.js')
+
 module.exports = {
   mode: 'universal',
-  /*
-  ** Headers of the page
-  */
+  server: {
+    port: 8010, // default: 3000
+    host: '0.0.0.0' // default: localhost
+  },
+  router: { // 中间件允许定义一个自定义函数运行在一个页面或一组页面渲染之前。
+    middleware: ['authorities'],
+    extendRoutes: routes
+  },
+
   head: {
     title: process.env.npm_package_name || '',
     meta: [
@@ -15,48 +23,55 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
-  /*
-  ** Customize the progress-bar color
-  */
   loading: { color: '#fff' },
-  /*
-  ** Global CSS
-  */
   css: [
+    'element-ui/lib/theme-chalk/index.css',
+    '~assets/css/main.scss'
   ],
-  /*
-  ** Plugins to load before mounting the App
-  */
+  styleResources: {
+    // 配置全局 scss 变量 和 mixin
+    scss: [
+      './assets/css/variables.scss',
+      './assets/css/mixins.scss'
+    ]
+  },
   plugins: [
+    '@/plugins/element-ui',
+    { src: '~plugins/axios', ssr: true }
   ],
-  /*
-  ** Nuxt.js dev-modules
-  */
   buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module'
   ],
-  /*
-  ** Nuxt.js modules
-  */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/style-resources'
   ],
-  /*
-  ** Axios module configuration
-  ** See https://axios.nuxtjs.org/options
-  */
   axios: {
+    proxy: true, // 代理
+    debug: false,
+    baseURL: `http://${process.env.HOST || 'localhost'}:${process.env.PORT ||
+      3000}`
   },
-  /*
-  ** Build configuration
-  */
+  proxy: { // 代理配置
+    '/api': 'http://localhost:3000'
+  },
   build: {
-    /*
-    ** You can extend webpack config here
-    */
-    extend (config, ctx) {
+    transpile: [/^element-ui/],
+    extend (config, { isDev, isClient }) {
+      if (isDev && isClient) {
+        config.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules)/,
+          options: {
+            fix: true
+          }
+        })
+      }
     }
+  },
+  render: {
+    resourceHints: false // 禁用预加载渲染，解决多项目加载不相干js问题
   }
 }

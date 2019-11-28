@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "admin",
+    "password": "123456",
+    "profession": "管理员"
+  },
+  {
+    "id": 2,
+    "name": "root",
+    "password": "123456",
+    "profession": "超级管理员"
+  },
+  {
+    "id": 3,
+    "name": "test",
+    "password": "123456",
+    "profession": "普通用户"
+  }
+]
