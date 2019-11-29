@@ -2,8 +2,8 @@
   <div class="demo-input-suffix">
     <h2>后台登录系统</h2>
     <el-form ref="ruleForm" :model="ruleForm" :rules="rules" class="demo-ruleForm">
-      <el-form-item prop="username">
-        <el-input v-model="ruleForm.username" placeholder="请输入用户名" clearable>
+      <el-form-item prop="account">
+        <el-input v-model="ruleForm.account" placeholder="请输入用户名" clearable>
           <i slot="prefix" class="el-input__icon el-icon-user" />
         </el-input>
       </el-form-item>
@@ -17,7 +17,7 @@
           立即登录
         </el-button>
         <div class="tips">
-          <span>username: admin</span>
+          <span>account: admin</span>
           <span>password: 123456</span>
         </div>
       </div>
@@ -32,11 +32,11 @@ export default {
   data () {
     return {
       ruleForm: {
-        username: 'admin',
+        account: 'admin',
         password: '123456'
       },
       rules: {
-        username: [
+        account: [
           { required: true, message: '用户名 不能为空' }
         ],
         password: [
@@ -53,7 +53,7 @@ export default {
             if (res.code === 0) {
               this.$router.push({ path: '/' })
             } else {
-              this.$message.error(res.msg)
+              this.$message.error(res.message)
             }
           }).catch((error) => {
             this.$message.error(error)

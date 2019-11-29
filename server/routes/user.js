@@ -1,68 +1,70 @@
 const fs = require('fs')
 const path = require('path')
 const router = require('koa-router')() // 路由中间件
-const jwt = require('jsonwebtoken') // 用于签发、解析`token`
-const koaJwt = require('koa-jwt') // 用于路由权限控制
+const jwt = require('jsonwebtoken')
+const sqlModel = require('../db/model/user')
+const ApiErrorNames = require('../db/error/ApiErrorNames')
+const { secret } = require('../db/config')
 
 /* 路由前缀 */
-router.prefix('/api')
+router.prefix('/api/users')
 
-/* jwt密钥 */
-const secret = 'secret'
-
-// 用户登录
-router.post('/login', (ctx) => {
-  const { username, password } = ctx.request.body
-  const data = fs.readFileSync(path.join(__dirname, '../mock/', 'user.json'), 'utf8')
-  const valid = JSON.parse(data).filter((item) => {
-    return item.name === username && item.password === password
-  })
-  if (!valid || valid.length === 0) {
-    ctx.body = {
-      code: 10001,
-      data: null,
-      msg: '用户名或密码错误'
+/**
+ * 获取用户信息
+ */
+exports.info = async (ctx, next) => {
+  try {
+    const token = ctx.header.authorization
+    let payload
+    if (token) {
+      payload = await jwt.verify(token.split(' ')[1], secret) // 解密，获取payload
+      const user = await sqlModel.findUserAndRole(payload.data)
+      if (!user) {
+        ctx.body = ApiErrorNames.getErrorInfo(ApiErrorNames.USER_NOT_EXIST)
+      } else {
+        const cont = user.user_count + 1
+        const updateInfo = [
+          cont,
+          // moment().format('YYYY-MM-DD HH:mm:ss'),
+          user.id
+        ]
+        await sqlModel
+          .UpdataUserInfo(updateInfo)
+          .then((res) => {
+            const data = {
+              avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+              name: user.user_id,
+              // roles: [user.user_admin === 0 ? 'admin' : '']
+              roles: [user.role_name]
+            }
+            ctx.body = ApiErrorNames.getSuccessInfo(data)
+          })
+          .catch(() => {
+            ctx.body = ApiErrorNames.getErrorInfo(ApiErrorNames.DATA_IS_WRONG)
+          })
+      }
+    } else {
+      ctx.body = ApiErrorNames.getErrorInfo(ApiErrorNames.INVALID_TOKEN)
     }
-  } else {
-    // jsonwebtoken在服务端生成token返回给客户端
-    const token = jwt.sign({
-      username,
-      // 设置 token 过期时间，一小时后，秒为单位
-      exp: Math.floor(Date.now() / 1000) + 60 * 60
-    }, secret)
-    ctx.body = {
-      code: 0,
-      data: {
-        token
-      },
-      msg: '登录成功'
-    }
+  } catch (error) {
+    ctx.throw(500)
   }
-})
-
-// 用户退出
-router.post('/logout', (ctx) => {
-  ctx.body = {
-    code: 0,
-    data: null,
-    msg: '退出成功'
-  }
-})
+}
 
 // koaJwt中间件会拿着密钥解析JWT是否合法。并且把JWT中的payload的信息解析后放到state中，ctx.state用于中间件的传值。
 // GET /api/users 获取所有用户列表
-router.get('/users', koaJwt({
-  secret
-}), (ctx) => {
-  // 验证通过，state.user
-  // console.log(ctx.state.user)
-  const data = fs.readFileSync(path.join(__dirname, '../mock/', 'user.json'), 'utf8')
-  ctx.body = {
-    code: 0,
-    data,
-    msg: '获取成功'
-  }
-})
+// router.get('', koaJwt({
+//   secret
+// }), (ctx) => {
+//   // 验证通过，state.user
+//   // console.log(ctx.state.user)
+//   const data = fs.readFileSync(path.join(__dirname, '../mock/', 'user.json'), 'utf8')
+//   ctx.body = {
+//     code: 0,
+//     data,
+//     msg: '获取成功'
+//   }
+// })
 
 // GET /api/users/:id 获取单个用户信息
 router.get('/users/:id', (ctx) => {

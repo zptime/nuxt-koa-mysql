@@ -24,9 +24,9 @@ export const mutations = {
 export const actions = {
   // user login
   login ({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { account, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username, password }).then((response) => {
+      login({ account, password }).then((response) => {
         const { data } = response
         if (data.code === 0) {
           commit('setToken', data.data.token)
