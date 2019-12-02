@@ -29,11 +29,11 @@ async function start () {
     await nuxt.ready()
   }
 
-  // routes 配置服务端路由
-  router(app)
-
   app.use(json())
   app.use(bodyParser())
+
+  // routes 配置服务端路由
+  router(app)
 
   app.use((ctx) => {
     ctx.status = 200
