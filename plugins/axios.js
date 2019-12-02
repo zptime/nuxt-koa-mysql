@@ -10,10 +10,10 @@ export default ({ $axios, redirect }) => {
     const token = getToken()
     if (token) {
       // Bearer是JWT的认证头部信息
-      config.headers.common.Authorization = `Bearer ${token}`
-      // config.headers.Authorization = `Bearer ${token}`
+      // config.headers.common.Authorization = `Bearer ${token}`
+      config.headers.Authorization = `Bearer ${token}`
     }
-    // console.log('Making request to ' + config.url)
+    console.log('Making request to ' + config.url)
     return config
   })
 

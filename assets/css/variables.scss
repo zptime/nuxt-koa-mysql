@@ -12,6 +12,12 @@ $subMenuHover:#001528;
 $sideBarWidth: 210px;
 $hideSideBarWidth: 54px;
 
+// 通用颜色
+$fff: #fff;
+$ccc: #ccc;
+$f2f: #f2f2f2;
+$eee: #eee;
+
 // the :export directive is the magic sauce for webpack
 // https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
 :export {

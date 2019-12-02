@@ -71,6 +71,9 @@ export default {
   .el-scrollbar {
     height: 100%;
   }
+  .scrollbar-wrapper {
+    overflow-x: hidden;
+  }
   .el-menu {
     border: none;//解决menu右边白边问题
     height: 100%;
@@ -81,14 +84,6 @@ export default {
     .el-scrollbar {
       height: calc(100% - 50px);
     }
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-.app-scrollbar{
-  .scrollbar-wrapper {
-    overflow-x: hidden;
   }
 }
 </style>

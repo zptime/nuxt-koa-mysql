@@ -23,11 +23,10 @@ export const mutations = {
 
 export const actions = {
   // user login
-  login ({ commit }, userInfo) {
+  login ({ commit }, { $axios, userInfo }) {
     const { account, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ account, password }).then((response) => {
-        const { data } = response
+      login($axios, { account, password }).then((data) => {
         if (data.code === 0) {
           commit('setToken', data.data.token)
           setToken(data.data.token)
@@ -40,9 +39,9 @@ export const actions = {
   },
 
   // user logout
-  logout ({ commit }) {
+  logout ({ commit }, $axios) {
     return new Promise((resolve, reject) => {
-      logout().then(() => {
+      logout($axios).then(() => {
         commit('setToken', '')
         removeToken()
         resolve()

@@ -3,10 +3,6 @@ const routes = require('./utils/routes.js')
 
 module.exports = {
   mode: 'universal',
-  server: {
-    port: 8010, // default: 3000
-    host: '0.0.0.0' // default: localhost
-  },
   router: { // 中间件允许定义一个自定义函数运行在一个页面或一组页面渲染之前。
     middleware: ['authorities'],
     extendRoutes: routes
@@ -37,7 +33,7 @@ module.exports = {
   },
   plugins: [
     '@/plugins/element-ui',
-    { src: '~plugins/axios', ssr: true }
+    '~plugins/axios'
   ],
   buildModules: [
     '@nuxtjs/eslint-module'
@@ -57,6 +53,7 @@ module.exports = {
   },
   build: {
     transpile: [/^element-ui/],
+    vendor: ['axios'],
     extend (config, { isDev, isClient }) {
       if (isDev && isClient) {
         config.module.rules.push({

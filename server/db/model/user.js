@@ -1,6 +1,6 @@
 const query = require('../mysql')
 
-// 查询用户是否存在
+// 查询单个用户是否存在
 const findUser = async function (account) {
   const _sql = `select * from user where user_account="${account}"  limit 1;`
   let result = await query(_sql)
@@ -11,6 +11,18 @@ const findUser = async function (account) {
     result = null
   }
   return result
+}
+
+// 查询所有用户
+const findAllUser = async function () {
+  const _sql = `select * from user;`
+  const result = await query(_sql)
+
+  if (Array.isArray(result) && result.length > 0) {
+    return result
+  } else {
+    return null
+  }
 }
 
 // 查询用户以及用户角色
@@ -37,6 +49,7 @@ const UpdataUserInfo = function (value) {
 
 module.exports = {
   findUser,
+  findAllUser,
   findUserAndRole,
   UpdataUserInfo
 }

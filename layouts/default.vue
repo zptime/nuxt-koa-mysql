@@ -10,7 +10,7 @@
         <!-- 顶栏组件 -->
         <Header />
       </div>
-      <nuxt />
+      <nuxt class="container" />
     </div>
   </div>
 </template>
@@ -61,6 +61,7 @@ export default {
   height: 100%;
   width: 100%;
   overflow-y: auto;
+  background-color: $f2f;
   &.mobile.openSidebar{
     position: fixed;
     top: 0;
@@ -92,6 +93,16 @@ export default {
       z-index: 9;
       width: calc(100% - #{$sideBarWidth});
       transition: width 0.28s;
+    }
+
+    .container {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      background-color: $fff;
+      margin: 70px 20px 20px;
+      padding: 20px;
     }
   }
 

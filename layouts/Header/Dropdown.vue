@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     async logout () {
-      await this.$store.dispatch('logout')
+      await this.$store.dispatch('logout', this.$axios)
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }

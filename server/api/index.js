@@ -1,9 +1,12 @@
-import axios from 'axios'
 
-export function login (data) {
-  return axios.post('/api/login', data)
+export function login ($axios, data) {
+  return $axios.post('/api/login', data)
 }
 
-export function logout () {
-  return axios.post('/api/logout')
+export function logout ($axios) {
+  return $axios.post('/api/logout')
+}
+
+export function getAllUser ($axios) {
+  return $axios.get('/api/users')
 }

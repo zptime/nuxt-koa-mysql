@@ -49,7 +49,7 @@ export default {
     submit (ruleForm) {
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
-          this.$store.dispatch('login', this.ruleForm).then((res) => {
+          this.$store.dispatch('login', { $axios: this.$axios, userInfo: this.ruleForm }).then((res) => {
             if (res.code === 0) {
               this.$router.push({ path: '/' })
             } else {

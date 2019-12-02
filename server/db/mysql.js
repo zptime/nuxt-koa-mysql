@@ -18,7 +18,7 @@ const query = (sql, values) => {
           } else {
             resolve(rows)
           }
-          connection.release()
+          connection.release() // 释放连接
         })
       }
     })
