@@ -8,10 +8,10 @@ const query = (sql, values) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((err, connection) => {
       if (err) {
-        console.log('数据库连接错误: ' + err.message)
+        // console.log('数据库连接错误: ' + err.message)
         reject(err)
       } else {
-        console.log('数据库 ' + config.database.database + ' 连接成功!');
+        // console.log('数据库 ' + config.database.database + ' 连接成功!');
         connection.query(sql, values, (err, rows) => {
           if (err) {
             reject(err)

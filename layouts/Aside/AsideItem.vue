@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!item.meta.hidden" class="menu-wrapper">
+  <div v-if="item.meta && !item.meta.hidden" class="menu-wrapper">
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren)">
       <nuxt-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)">
